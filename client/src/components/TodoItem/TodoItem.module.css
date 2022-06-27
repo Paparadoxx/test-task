@@ -1,0 +1,40 @@
+
+.container {
+	display: flex;
+	flex-direction: column;
+
+	margin: 10px 10px 0 30px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid grey;
+
+	max-width:max-content;
+}
+
+.title, .description {
+	margin-bottom: 0;
+}
+
+.deleteBtn {
+	display: inline-block;
+
+  box-sizing: border-box;
+  padding: 5px;
+	width: 100px;
+
+	color: rgb(46, 45, 45);
+	background: rgb(240, 142, 142);
+
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+
+  border: none;
+  border-radius: 5px;
+
+  font-size: 14px;
+
+}
+
+.deleteBtn:hover {
+	background: rgb(245, 93, 93);
+}

@@ -1,30 +1,30 @@
-const express = require('express')
-const bodyParser = require('body-parser')
-const cors = require('cors')
-const helmet = require('helmet')
+const express = require("express");
+const cors = require("cors");
 
-const todosRouter = require('./routes/todo-routes');
+const app = express();
 
-const PORT = process.env.PORT || 8000
+const corsOptions = {
+  origin: "http://localhost:3000"
+};
 
-const app = express()
+app.use(cors(corsOptions));
 
-app.use(cors())
-app.use(helmet())
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
+app.use(express.json());
 
-app.use('/todos', todosRouter)
+app.use(express.urlencoded({ extended: true }));
 
-app.use(function (err, req, res, next) {
-  console.error(err.stack)
-  res.status(500).send('Something is broken')
-})
+const db = require("./models");
 
-app.use(function (req, res, next) {
-  res.status(404).send('Sorry we could not find that.')
-})
+db.sequelize.sync();
 
-app.listen(PORT, function() {
-  console.log(`Server is running on: ${PORT}`)
-})
+app.get("/", (req, res) => {
+  res.json({ message: "App is running" });
+});
+
+require('./routes/auth.routes')(app);
+// require('./routes/user.routes')(app);
+
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}.`);
+});
