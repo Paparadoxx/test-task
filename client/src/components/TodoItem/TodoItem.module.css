@@ -10,7 +10,12 @@
 	max-width:max-content;
 }
 
-.title, .description {
+.title {
+	margin-bottom: 0;
+	cursor: pointer;
+} 
+
+.description {
 	margin-bottom: 0;
 }
 

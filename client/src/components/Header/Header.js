@@ -1,19 +1,28 @@
 import React from 'react';
+import { useDispatch, useSelector } from "react-redux";
 import styles from './Header.module.css';
+import { logout } from '../../store/slices/authSlice';
 
-const TopBar = ({username}) => {
+const Header = () => {
+
+	const { user: currentUser } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
 	return (
 		<nav className={styles.nav}>
 			<div className={styles.container}>
 				<span className={styles.username}>
-					{username}
+					{currentUser.username}
 				</span>
-				<button className={styles.btn}>
-					Выйти
+				<button 
+					onClick={() => dispatch(logout())}
+					className={styles.btn}
+				>
+					выйти
 				</button>
 			</div>
 	</nav>
 )
 }
 
-export default TopBar;
+export default Header;

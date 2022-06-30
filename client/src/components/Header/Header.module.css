@@ -1,0 +1,41 @@
+.nav {
+	display: flex;
+	width: 100vw;
+	height: 55px;
+
+	background: #603FE6;
+
+	justify-content: flex-end;
+
+	align-items: center;
+}
+
+.username {
+	font-size: 20px;
+	color:white;
+	margin-right: 50px;
+}
+
+.btn {
+	font-size: 20px;
+	color:white;
+	background:none;
+
+	box-sizing: border-box;
+	margin-right: 50px;
+
+	font-size: 20px;
+  line-height: 22px;
+
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+
+	border: none;
+  border-bottom: 1px solid transparent; 
+}
+
+.btn:hover {
+	border-bottom: 1px solid white;
+}
+

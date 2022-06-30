@@ -1,21 +1,20 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { v4 as uuidv4 } from "uuid";
 import TodoService from '../../services/todoService';
 
+const initialState = [];
 
 export const getTodos = createAsyncThunk(
   "todos/load",
-  async () => {
-    const res = await TodoService.getAll();
+  async ({UserId}) => {
+    const res = await TodoService.getAll(UserId);
     return res.data;
   }
 );
 
 export const addTodo = createAsyncThunk (
   "todos/create",
-  async ({title, description}) => {
-    const todoId = uuidv4();
-    const res = await TodoService.createTodo({title, description, todoId});
+  async ({title, description, userId, todoId}) => {
+    const res = await TodoService.createTodo({userId, title, description, todoId});
     return res.data;
     }
 );
@@ -36,31 +35,29 @@ export const updateTodo = createAsyncThunk(
     }
   );
 
-
 const todoSlice = createSlice({
   name: 'todos',
-  initialState: {
-    todos: [],
+  initialState,
+  extraReducers: {
+    [getTodos.fulfilled]: (state, action) => {
+      // state.todos = action.payload.todos;
+      return [...action.payload];
     },
-    extraReducers: {
-      [getTodos.fulfilled]: (state, action) => {
-        return [...action.payload];
-      },
-      [addTodo.fulfilled]: (state, action) => {
-        state.push(action.payload);
-      },
-      [updateTodo.fulfilled]: (state, action) => {
-        const index = state.findIndex(todo => todo.todoId === action.payload.todoId);
-          state[index] = {
-          ...state[index],
-          ...action.payload,
+    [addTodo.fulfilled]: (state, action) => {
+      state.push(action.payload);
+    },
+    [updateTodo.fulfilled]: (state, action) => {
+      const index = state.findIndex(todo => todo.todoId === action.payload.todoId);
+        state[index] = {
+        ...state[index],
+        ...action.payload,
         };
-      },
-      [removeTodo.fulfilled]: (state, action) => {
-        let index = state.findIndex(({ todoId }) => todoId === action.payload.todoId);
-          state.splice(index, 1);
-      },
     },
+    [removeTodo.fulfilled]: (state, action) => {
+      let index = state.findIndex(({ todoId }) => todoId === action.payload.todoId);
+      state.splice(index, 1);
+    },
+  },
 });
 
 export default todoSlice.reducer;

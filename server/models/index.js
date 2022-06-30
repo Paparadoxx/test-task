@@ -10,7 +10,7 @@ const sequelize = new Sequelize(
     dialect: config.dialect,
     operatorsAliases: false,
     define: {
-      timestamps: false
+      timestamps: true
     },
     pool: {
       max: config.pool.max,

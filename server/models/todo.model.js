@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const Todo = sequelize.define("todos", {
+  const Todo = sequelize.define("todo", {
     todoId: {
       type: Sequelize.STRING,
       primaryKey: true,
@@ -14,9 +14,14 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: true
     },
     createdAt: {
+      field: 'created_at',
       type: Sequelize.DATE,
       allowNull: false, 
     },
+    updatedAt: {
+      field: 'updated_at',
+      type: Sequelize.DATE,
+  },
     userId: {
       type: Sequelize.INTEGER,
       allowNull: false

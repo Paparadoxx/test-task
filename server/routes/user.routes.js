@@ -1,5 +1,5 @@
 const { authJwt } = require("../middleware/authJwt");
-const controller = require("../controllers/user.controller");
+const controller = require("../controllers/todo.controller");
 
 module.exports = function(app) {
   app.use(function(req, res, next) {
@@ -10,9 +10,12 @@ module.exports = function(app) {
     next();
   });
 
-  app.get(
-    "/user/todos",
-    [authJwt.verifyToken],
-    controller.getTodos
-  );
+  app.get( "/user/todos/", controller.getTodos);
+
+  app.get("/user/todos/:todoId", controller.findOne);
+
+  app.delete("/user/todos/:todoId", controller.delete);
+
+  app.post("/user/todos", controller.create);
+
 };

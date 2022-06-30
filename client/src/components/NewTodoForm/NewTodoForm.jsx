@@ -1,8 +1,9 @@
 import React from "react";
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import { addTodo } from "../../store/slices/todoSlice";
 import styles from './NewTodoForm.module.css';
 
+import { v4 as uuidv4 } from "uuid";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
@@ -12,7 +13,10 @@ const NewTodoForm = () => {
   const initialValues = {
     title: "",
     description: "",
-  };
+    userId: "",
+    todoId: "",
+  };  
+  const { user: currentUser } = useSelector((state) => state.auth);
 
   const validationSchema = Yup.object().shape({
     title: Yup.string().required("введите заголовок задания")
@@ -20,8 +24,10 @@ const NewTodoForm = () => {
 
   const handleAddTodo = (formValue) => {
     const {title, description} = formValue;
+    const userId = currentUser.id;
+    const todoId = uuidv4();
 
-    dispatch(addTodo({title, description}))
+    dispatch(addTodo({title, description, userId, todoId}))
     .unwrap()
     .catch((err) => {
       return err.message
@@ -29,6 +35,7 @@ const NewTodoForm = () => {
   };
 
   return (
+    <>
     <div className={styles.wrapper}>
       <div className={styles.card}>
         <Formik
@@ -36,8 +43,8 @@ const NewTodoForm = () => {
           validationSchema={validationSchema}
           onSubmit={handleAddTodo}
         >
-          <Form>
-            <h4>Добавить задание</h4>
+          <Form className={styles.form}>
+            <h4 className={styles.title} >Добавить задание</h4>
             <Field 
               name="title"
               type="text" 
@@ -45,18 +52,19 @@ const NewTodoForm = () => {
               placeholder="заголовок задания"
             />
             <ErrorMessage
+              className={styles.alert}
               name="title"
               component="div"
             />
             <Field 
               name="description"
-              type="text" 
-              className={styles.input} 
+              as="textarea"
+              className={styles.textarea} 
               placeholder="описание задания"
             />
           <button 
+            className={styles.btn} 
             type="submit"
-            onClick={() => dispatch(addTodo)}
           >
             Добавить
           </button>
@@ -64,6 +72,7 @@ const NewTodoForm = () => {
         </Formik>
       </div>    
     </div>
+    </>
     );
 };
 

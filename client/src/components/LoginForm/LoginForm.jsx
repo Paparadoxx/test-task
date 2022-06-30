@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-
+import { Navigate } from "react-router-dom";
 import styles from "./LoginForm.module.css";
 
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -11,6 +11,7 @@ import { login } from "../../store/slices/authSlice";
 const LoginForm = (props) => {
   const { message } = useSelector((state) => state.message);
   const dispatch = useDispatch();
+	const {user} = useSelector((state) => state.auth);
 
   const initialValues = {
     email: "",
@@ -28,18 +29,16 @@ const LoginForm = (props) => {
     
         dispatch(login({ email, password }))
           .unwrap()
-          .then(() => {
-            props.history.push("/TodoList");
-            window.location.reload();
-            
-          })
           .catch((err) => {
             console.log(err.message)
           });
       };
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.card}>
+        {user && (
+        <Navigate to="/todos" replace={true} />)}
         <Formik
            initialValues={initialValues}
            validationSchema={validationSchema}
