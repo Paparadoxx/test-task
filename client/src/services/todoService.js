@@ -1,27 +1,26 @@
 import axios from "axios";
-import authHeader from "./auth-header";
 
 
-const API_URL = "http://localhost:8000";
+const API_URL = "http://localhost:8000/user";
 
-const getUserTodos = (UserId) => {
-  return axios.get(API_URL +`/user/todos/?UserId=${UserId}`, { headers: authHeader()});
+const getUserTodos = (userId) => {
+  return axios.get(API_URL +`/todos/${userId}`)
 };
 
 const getTodo = todoId => {
-  return axios.get( API_URL+`/todos/${todoId}`, { headers: authHeader()});
+  return axios.get(API_URL+`/todo/${todoId}`);
 };
 
 const createTodo = data => {
-  return axios.post(API_URL, data, { headers: authHeader()});
+  return axios.post(API_URL+'/todos', data);
 };
 
 const updateTodo = (todoId, data) => {
-  return axios.put(API_URL+`/todos/${todoId}`, data, { headers: authHeader()});
+  return axios.put(API_URL+`/todos/${todoId}`, data);
 };
 
 const removeTodo = todoId => {
-  return axios.delete( API_URL+`/user/todos/${todoId}`, { headers: authHeader()});
+  return axios.delete(API_URL+`/todos/${todoId}`);
 };
 
 const todoService = {

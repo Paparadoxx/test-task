@@ -1,38 +1,37 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect, useCallback} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
 import Header from "../Header/Header";
 import NewTodoForm from "../NewTodoForm/NewTodoForm";
-import todoService from "../../services/todoService";
 import styles from './TodoList.module.css';
-import { removeTodo } from "../../store/slices/todoSlice";
+import { removeTodo, getTodos } from "../../store/slices/todoSlice";
 
-const TodoList = (props) => {
+const TodoList = () => {
+	
 	const dispatch = useDispatch();
-	const [content, setContent] = useState("");
 	const {user} = useSelector((state) => state.auth);
-  const UserId = user.id;
+  const userId = user.id;
 
-	useEffect(() => {
-    todoService.getUserTodos(UserId).then(
-      (response) => {
-        setContent({todos:response.data.todos});
-      },
-      (error) => {
-				console.log(error.message)
-			}
-		)
-		}, [UserId]);
+	const todos = useSelector(state => state.todos.todos);
 
+	const initFetch = useCallback(() => {
+    dispatch(getTodos(userId))
+  }, [userId, dispatch]);
+
+  useEffect(() => {
+    initFetch()
+  }, [initFetch])
+
+	
 	return (
 		<>
 			<Header/>
 			<div className={styles.wrapper}>
 				<div className={styles.body}>
-					{content ? (
+					{todos ? (
 					<div>
-						{content.todos.map((todo) => (
+						{todos?.map((todo) => (
 							<div key={todo.todoId}>
 								<div className={styles.container}>
 								<Link to={`${todo.todoId}`}>
@@ -43,7 +42,7 @@ const TodoList = (props) => {
 										<button
 											className={styles.deleteBtn}
 											onClick={() => dispatch(removeTodo({todoId:todo.todoId}))}
-										>Удалить
+										>Удалить 
 										</button>
 									</div> 
 							</div>

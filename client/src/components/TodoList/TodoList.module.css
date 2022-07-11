@@ -13,6 +13,14 @@
 	cursor: pointer;
 }
 
+a {
+	text-decoration: none;
+	color: #3641d7;
+}
+a:visited {
+	color: #3641d7;
+}
+
 .deleteBtn {
 	display: inline-block;
 

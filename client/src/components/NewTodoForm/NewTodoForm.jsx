@@ -15,20 +15,21 @@ const NewTodoForm = () => {
     description: "",
     userId: "",
     todoId: "",
-  };  
+  };
   const { user: currentUser } = useSelector((state) => state.auth);
 
   const validationSchema = Yup.object().shape({
     title: Yup.string().required("введите заголовок задания")
     });
 
-  const handleAddTodo = (formValue) => {
+  const handleAddTodo = (formValue, formikActions) => {
     const {title, description} = formValue;
     const userId = currentUser.id;
     const todoId = uuidv4();
 
     dispatch(addTodo({title, description, userId, todoId}))
     .unwrap()
+    .then(formikActions.resetForm())
     .catch((err) => {
       return err.message
     });

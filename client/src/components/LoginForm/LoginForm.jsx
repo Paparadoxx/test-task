@@ -8,7 +8,7 @@ import * as Yup from "yup";
 
 import { login } from "../../store/slices/authSlice";
 
-const LoginForm = (props) => {
+const LoginForm = () => {
   const { message } = useSelector((state) => state.message);
   const dispatch = useDispatch();
 	const {user} = useSelector((state) => state.auth);
@@ -25,7 +25,6 @@ const LoginForm = (props) => {
 
       const handleLogin = (formValue) => {
         const { email, password } = formValue;
-        console.log(email, password);
     
         dispatch(login({ email, password }))
           .unwrap()
