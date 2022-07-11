@@ -1,4 +1,3 @@
-const { authJwt } = require("../middleware/authJwt");
 const controller = require("../controllers/todo.controller");
 
 module.exports = function(app) {
@@ -10,12 +9,14 @@ module.exports = function(app) {
     next();
   });
 
-  app.get( "/user/todos/", controller.getTodos);
+  app.get( "/user/todos/:userId", controller.getTodos);
 
-  app.get("/user/todos/:todoId", controller.findOne);
+  app.get("/user/todo/:todoId", controller.findOne);
 
   app.delete("/user/todos/:todoId", controller.delete);
 
   app.post("/user/todos", controller.create);
+
+  app.put("/user/todos/:todoId", controller.update);
 
 };

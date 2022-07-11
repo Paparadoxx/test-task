@@ -4,7 +4,7 @@ const Todo = db.todo;
 
 exports.getTodos = async (req, res) => {  
   try {
-    const id = req.query.UserId;
+    const id = req.params.userId;
     const todos = await Todo.findAll({ where: {userId: id}})
       if (!todos) {
     return res.status(500).send({ message:"Нет активных задач"});
@@ -23,7 +23,7 @@ exports.create = async (req, res) => {
 			});
       return;
     };
-      const  todo = await {
+      const todo = await {
 				title: req.body.title,
 				description: req.body.description,
 				userId: req.body.userId,
@@ -38,49 +38,58 @@ exports.create = async (req, res) => {
 	};
 };
 
-exports.update = (req, res) => {
-  const id = req.params.todoId;
-
+exports.update = async (req, res) => {
+try {
 	if (!req.body.title) {
 		res.status(400).send({
 			message: "Введите название задачи"
 		});
+    return;
+  };
+  const id = await req.params.todoId;
   Todo.update(req.body, {
     where: { todoId: id }
   })
-    .catch(error => {
-      res.status(500).send({
-        message: error.message
-      });
+  .then(data => {
+    res.send(data);
+  })
+  } catch(error) {
+    res.status(500).send({
+      message: error.message
     });
-	};
-}
+  };
+};
 
 exports.delete = async (req, res) => {
   try {
-    const id = req.params.todoId;
-    await Todo.destroy({where: { todoId: id}})
+    const id = await req.params.todoId;
+    Todo.destroy({where: { todoId: id}})
+    .then(num => {
+      if (num == 1) {
+        res.send({
+          message: "Задача удалена"
+        });
+      } else {
+        res.send({
+          message: "ошибка при удалении задачи!"
+        });
+      }
+    })
   } catch (error) {
-    return res.status(500).send("ошибка при удалении задачи");
-      };
+    return res.status(500).send("ошибка при удалении задачи!!");
+    };
 };
 
 exports.findOne = async (req, res) => {
   try {
-  const id = await req.params.todoId;
-  Todo.findByPk(id)
-    .then(data => {
-      if (data) {
-        res.send(data);
-      } else {
-        res.status(404).send({
-          message: `Запись не найдена`
-        });
-      }
-    })
+  const todoId = req.params.todoId;
+  const todos = await Todo.findByPk(todoId)
+  if (!todos) {
+    return res.status(500).send({ message:"Задача не найдена"});
+    }
+    return res.status(200).send ({todos});
     } catch(error) {
-      res.status(500).send({
-        message: error.message
-      });
-    };
+  return res.status(500).send({ message: error.message });
 };
+};
+
